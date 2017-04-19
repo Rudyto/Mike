@@ -39,6 +39,9 @@
 		</div>
 		<div id="mike">
 		</div>
+		<div> 
+		<p id="message"></p>
+			</div>
 		<script>
 			$(function() {
 				$( "input" ).click(function(e) {
@@ -63,8 +66,26 @@
 					});
 					
 					request.done(function( msg ) { // Success
-						$( "#mike" ).html( msg ); // Mise à jour du contenu de la div qui a pour id "Mike"
+					console.log(msg); // affichage dans la console avant la conversion en un objet. msg est une string
+					
+					msg = JSON.parse(msg); // conversion json en un objet javascript
+
+					console.info(msg); // affichage dans la console par la conversion en un objet - msg est un objet javascript
+
+						if(msg.erreur == false) {
+
+						$( "#mike" ).html( msg.message ); // Mise à jour du contenu de la div qui a pour id "Mike"
 						$( "#requet" ).html( myRequest ); // Mise à jour du contenu de la span qui a pour id "requet" generer dans le tableau envoyer par le php
+						
+							$("#message").text("Voici les résultats de votre requete");
+							$("#message").css("background-color","green");
+
+
+						}else
+						{
+							$("#message").text("msg.message");
+							$("#message").css("background-color","red");
+						}
 					});
 					
 					request.fail(function( jqXHR, textStatus ) {

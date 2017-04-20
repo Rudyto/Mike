@@ -1,0 +1,108 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <table id="table" border="2"></table>
+        <!-- Tableau contenant tout les utilisateurs -->
+    </div>
+    <div>
+        <table id="commentaires"></table>
+        <!-- Tableau contenant l'utilisateur selectionner -->
+    </div>
+    <script>
+        $(function() { // START Document.ready en JQuery
+
+
+
+
+            /**********************  START Premier Partie  **********************/
+
+
+            $.ajax({
+                url: "http://jsonplaceholder.typicode.com/posts",
+                method: "GET",
+            })
+
+
+            .done(function(mike) { // En cas de reussite - on stocker les retour dans la varible Mike.
+
+                var table = "<tr>"; // Init variable table
+
+                $.each(mike[0], function(index, value) { // Cette première boucle nous génère les entêtes
+                    table += "<th>";
+                    table += index; // Affiche la key -> index de notre object
+                    table += "</th>";
+                });
+
+                table += "</tr>";
+                for (var i = 0; i < mike.length; i++) { // pour les lignes
+
+                    table += "<tr id='posts-" + mike[i].id + "'>";
+
+                    $.each(mike[i], function(index, value) { // pour les colonnes
+                        table += "<td>";
+                        table += value;
+                        table += "</td>";
+
+                    });
+                    table += "</tr>";
+                };
+                $("#table").html(table); // insertion du tableau cf div id table
+
+
+                /**********************  END Premier Partie  **********************/
+
+                $("tr").click(function(e) { // creation d'un evt sur le "tr"
+
+                    var idPost = $(this).attr('id'); //on récupère l'attr id sur le "tr" sur lequel on a cliqué
+                    idPost = idPost.split("-"); // ici on scinde une string pr retourner les résultats dans un array grâce à une chaîne définie comme séparateur. 
+                    console.log(idPost)
+
+                    $.ajax({
+                        url: "http://jsonplaceholder.typicode.com/comments",
+                        data: {
+                            postId: idPost[1]
+                        },
+                        method: "GET",
+                    })
+
+
+                    .done(function(mike) { // En cas de reussite - on stocker les retour dans la varible Mike.
+
+                        var table = "<tr>"; // Init variable table
+
+                        $.each(mike[0], function(index, value) { // id cf ligne 35
+                            table += "<th>";
+                            table += index; // Affiche la key -> index de notre object
+                            table += "</th>";
+                        });
+
+                        table += "</tr>";
+                        for (var i = 0; i < mike.length; i++) { // cf ligne 42
+
+                            table += "<tr id='posts-" + mike[i].id + "'>";
+
+                            $.each(mike[i], function(index, value) { // cf ligne 46
+                                table += "<td>";
+                                table += value;
+                                table += "</td>";
+
+                            });
+                            table += "</tr>";
+                        };
+                        $("#commentaires").html(table); // insertion du tableau cf div id commentaires
+                    })
+                })
+
+            })
+        })
+    </script>
+
+</body>
+
+
+</html>

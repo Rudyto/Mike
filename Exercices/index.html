@@ -1,58 +1,105 @@
-<!DOCTYPE html>
 <html>
+
 <head>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<title>Tableau</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
+
 <body>
-<div>
-	<table id="table" border="1">	
-	</table>
-</div>
-	
-	<script>
-	$(function(){ // document ready en jquery
-		var request = $.ajax({
-			url: "https://jsonplaceholder.typicode.com/users",
-			method: "GET",
-		})
-		request.done(function(mike) {
-			var table = "<tr>";
-			$.each(mike[0], function(index, value) {
-				if(index == "name" || index == "username" || index == "email" || index == "phone" || index =="company") {
-					table += "<th>";
-					table += index;
-					table += "</th>";
-				}
+    <div>
+        <table id="table"></table> 
+        <!-- tableau contenant tous les utilisateurs -->
+    </div>
+    <div id="User"> 
+    <!-- tableau contenant l'utilisateur selectionné -->
+    	
+    </div>
+    <script>
+        $(function() { // Start Document.ready en JQuery
 
-			});
-			table += "</tr>";
-			for(var i = 0; i < mike.length; i++) {
-				table += "</tr>";
-				$.each(mike[i], function(index, value) {
-				if(index == "name" || index == "username" || index == "email" || index == "phone" || index =="company") {
-				table += "<td>";
-				if(index == "company") {
-					table += value.name;
-				} else {
-					table += value;
-				}
-				table += "</td>";
-			}
-			});
-				table += "</tr>";
-		};
-		$("#table").html(table);
-	})
-		request.fail(function(XPDDR, data, data2){
-			alert( "Request failed!")
-			
-		})
-	})
+        	/* Request en Ajax pour récupérer les utilisateurs - Retour en Array JSON */
+
+            var request = $.ajax({
+                url: "http://jsonplaceholder.typicode.com/users",
+                method: "GET",
+            })
 
 
-	
-				</script>
 
-			</body>
-			</html>
+            request.done(function(mike) { // en cas de réussite - on stocke les retours dans la variable mike. 
+            
+
+                var table = "<tr>"; // init variable table
+
+                /* First boucle: Récupération des titres du tableau - en bouclant sur le premier élément de notre reponse (mike[0], il recupère les clés) */
+
+                $.each(mike[0], function(index, value) {
+
+                    if (index == "name" || index == "username" || index == "email" || index == "phone" || index == "company") { // Voir exercice
+
+                        table += "<th>";
+                        table += index; // Affiche la clé -> index de notre objet
+                        table += "</th>";
+                    }
+                
+                });
+               
+                table += "</tr>";
+                
+                /* Seconde boucle: Parcourt chaque ligne du tableau
+                					|id|name|phone| 
+				1ere itération	->	|1 |Mike|06100|
+				2nde itération	->	|2 |Bob |06100|
+                */
+
+                for (var i = 0; i < mike.length; i++) {
+                    table += "<tr>";
+                   
+                 /* Troisième boucle: Parcourt chaque colonne du tableau
+          								 |		|
+          								 v		v
+                					|id|name|phone| 
+									|1 |Mike|06100|
+									|2 |Bob |06100|
+
+                */
+
+                    $.each(mike[i], function(index, value) {
+                        if (index == "name" || index == "username" || index == "email" || index == "phone" || index == "company") {
+
+                            if (index == "name") { // si l'index est le nom, on rajoute une balise <a>.
+
+                                table += "<td><a href='#'>";
+                                table += value;
+                                table += "</a></td>";
+                            } else {
+
+
+                                table += "<td>";
+                                if (index == "company") { // company est un objet
+                                    table += value.name;
+                                } else {
+                                    table += value;
+                                }
+
+                                table += "</td>";
+
+
+                            }
+                        }
+
+
+                    });
+                    table += "</tr>";
+                };
+                $("#table").html(table); // Affiche le tableau dans la balise qui pour id table
+            })
+            request.fail(function(XPDDR, data) {
+                alert("Request fail !")
+            })
+        }) // End Document.ready
+    </script>
+
+</body>
+
+
+</html>

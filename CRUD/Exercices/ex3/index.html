@@ -1,0 +1,43 @@
+<html>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <form>
+            <label>Marque</label>
+            <input id="marque" name="marque" type="text" /><br/><br/>
+            <label>Modele</label>
+            <input id="modele" name="modele" type="text" /><br/><br/>
+            <label>Annee</label>
+            <input id="annee" name="annee" type="number" /><br/><br/>
+            <label>Couleur</label>
+            <input id="couleur" name="couleur" type="color" /><br/><br/>
+            <!--Insérez le type color pour avoir le color picker sur la page-->
+            <label>Envoyez</label>
+            <input id="envoyez" name="envoyez" type="submit" />
+        </form>
+    </div>
+    <!--ici on crée un id reponse pour avoir le msg comme quoi la req a été effectuée-->
+    <div id="reponse">
+    </div>
+    <script>
+        $(function() { // format raccourci pr le document ready
+            // $("input[type=submit]").click(function(e) {});
+
+            $("#envoyez").click(function(e) { // fonction pour cibler suelement le submit de l'input
+                e.preventDefault();
+
+                $.post("insert.php", $("form").serialize()) // "linearise une variable" -> retourne une string contenant ttes les valeurs des champs du formulaire
+                    // cf https://api.jquery.com/serialize/
+                    .done(function(data) {
+                        $("#reponse").html(data);
+                    })
+            });
+        })
+    </script>
+</body>
+
+</html>
